@@ -1,0 +1,54 @@
+algorithm:
+  name: Binary Search – Peak Finding
+  pattern: Peak Element Search
+  description: >
+    Find a peak element in an array. A peak is an element that is
+    strictly greater than its neighbors.
+    The array may contain multiple peaks; returning any one is valid.
+
+  key_insight:
+    - If nums[mid] < nums[mid + 1], the slope is increasing
+    - A peak must exist on the right side
+    - If nums[mid] > nums[mid + 1], the slope is decreasing
+    - A peak exists on the left side or at mid
+
+  guarantee:
+    - Moving toward the higher neighbor always leads to a peak
+    - Binary search ensures O(log n) time
+    - We find A peak, not necessarily the global maximum
+
+  find_peak_element:
+    purpose: Find any peak element index
+    code: |
+      public static int findPeakElement(int[] nums) {
+          int left = 0;
+          int right = nums.length - 1;
+
+          while (left < right) {
+              int mid = left + (right - left) / 2;
+
+              if (nums[mid] < nums[mid + 1]) {
+                  // Upward slope → peak is to the right
+                  left = mid + 1;
+              } else {
+                  // Downward slope → peak is to the left or at mid
+                  right = mid;
+              }
+          }
+
+          return left;
+      }
+
+  complexity:
+    time: O(log n)
+    space: O(1)
+
+  boundary_behavior:
+    - Loop condition uses left < right
+    - Compare mid with mid + 1 (safe because mid < right)
+    - No need to check array bounds explicitly
+
+  interview_takeaways:
+    - Peak finding does not require full traversal
+    - Slopes give direction toward a peak
+    - This is a classic application of binary search on structure

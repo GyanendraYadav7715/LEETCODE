@@ -1,0 +1,45 @@
+practice_problems:
+  basic_binary_search:
+    - problem: "Binary Search"
+      level: "Easy"
+      description: "Find target in sorted array"
+      approach:
+        template: "Template 1"
+        strategy: "Exact match using left <= right"
+
+    - problem: "Search Insert Position"
+      level: "Easy"
+      description: "Find index where target should be inserted"
+      approach:
+        template: "Template 2"
+        strategy: "Find first element >= target"
+
+    - problem: "First Bad Version"
+      level: "Easy"
+      description: "Find first true value in boolean version array"
+      approach:
+        template: "Template 2"
+        strategy: "Minimize index where condition becomes true"
+
+    - problem: "Find First and Last Position of Element in Sorted Array"
+      level: "Medium"
+      description: "Find starting and ending position of a target value"
+      approach:
+        strategy: "Two binary searches"
+        details:
+          - "First search: find first occurrence"
+          - "Second search: find last occurrence"
+
+    - problem: "Search in Rotated Sorted Array"
+      level: "Medium"
+      description: "Search target in sorted array rotated at one pivot"
+      approach:
+        strategy: "Identify which half is sorted"
+        key_rule: "One half is always sorted"
+
+    - problem: "Find Minimum in Rotated Sorted Array"
+      level: "Medium"
+      description: "Find pivot (minimum element) in rotated sorted array"
+      approach:
+        strategy: "Compare mid with right element"
+        reason: "Determines which side contains the rotation point"

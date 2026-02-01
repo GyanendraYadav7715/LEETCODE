@@ -1,0 +1,112 @@
+algorithm:
+  name: Binary Search – First and Last Occurrence
+  category: Boundary Search
+  description: >
+    Find the leftmost (first) and rightmost (last) index of a target
+    in a sorted array using modified binary search.
+
+  functions:
+    findFirst:
+      purpose: Find FIRST (leftmost) occurrence of target
+      code: |
+        int findFirst(int[] nums, int target) {
+          int left = 0;
+          int right = nums.length - 1;
+
+          while (left < right) {
+            int mid = left +((right - left) / 2);
+
+            if (nums[mid] < target) {
+              left = mid + 1;  // Target is in right half
+            } else {
+              // nums[mid] >= target
+              // Could be answer, but continue searching left
+              right = mid;  // NOT mid - 1
+            }
+          }
+
+          // Post-processing: verify
+          return nums[left] === target ? left : -1;
+        }
+
+    findLast:
+      purpose: Find LAST (rightmost) occurrence of target
+      code: |
+        int findLast(int[] nums, int target) {
+          int left = 0;
+          int right = nums.length - 1;
+
+          while (left < right) {
+            // CRITICAL: ceiling mid to force right bias
+            int mid = left + Math.ceil((right - left) / 2);
+
+            if (nums[mid] > target) {
+              right = mid - 1;  // Target is in left half
+            } else {
+              // nums[mid] <= target
+              // Could be answer, but continue searching right
+              left = mid;  // NOT mid + 1
+            }
+          }
+
+          return nums[left] === target ? left : -1;
+        }
+
+  searchInsert:
+    inputs:
+      - nums: sorted integer array
+      - target: integer value
+    output:
+      - index where target exists or should be inserted
+
+    code: |
+      public static int searchInsert(int[] nums, int target) {
+          int left = 0;
+          int right = nums.length - 1;
+
+          while (left < right) {
+              int mid = left + (right - left) / 2;
+
+              if (nums[mid] < target) {
+                  left = mid + 1;
+              } else {
+                  right = mid;
+              }
+          }
+
+          return nums[left] < target ? left + 1 : left;
+      }
+
+  boundary_properties:
+    - Loop condition is left < right
+    - Search is biased to the LEFT
+    - right is set to mid (not mid - 1)
+    - left always converges to insertion point
+
+  edge_cases:
+    - Target smaller than all elements → insertion index = 0
+    - Target larger than all elements → insertion index = nums.length
+    - Target exists → index of target returned
+
+  key_insight:
+    explanation: >
+      The variable 'left' always ends at the correct insertion position,
+      whether or not the target exists in the array.
+  complexity:
+    time: O(log n)
+    space: O(1)
+
+  critical_insights:
+    - First occurrence biases search to the LEFT (right = mid)
+    - Last occurrence biases search to the RIGHT (left = mid)
+    - Use Math.floor for first occurrence
+    - Use Math.ceil for last occurrence to avoid infinite loops
+    - Loop condition is left < right, not <=
+    - Always verify nums[left] === target after the loop
+    - Template returns insertion point even if target does not exist
+
+  why_mid_differs:
+    explanation: >
+      For last occurrence, when left = 1 and right = 2,
+      we need mid = 2 (not 1) to make progress.
+      Using Math.ceil guarantees movement toward the right.

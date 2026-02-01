@@ -1,0 +1,107 @@
+algorithm:
+  name: Binary Search on Answer Space
+  pattern: Answer Space Binary Search
+  difficulty: God-tier
+  description: >
+    Instead of searching inside an array, we search in the range of
+    possible answers. If a candidate answer can be verified using a
+    predicate function, binary search can be applied on the answer space.
+
+  when_to_use:
+    - We need to minimize or maximize a value X
+    - A condition can be checked for any candidate X
+    - Predicate function is monotonic (true → true or false → false)
+
+  key_insight:
+    - If a value X is achievable, then all values greater/smaller (based on problem)
+      are also achievable
+    - This monotonic behavior enables binary search
+
+  generic_template:
+    purpose: Minimize X such that condition holds
+    code: |
+      public static int binarySearchOnAnswer(int min, int max) {
+          int left = min;
+          int right = max;
+
+          while (left < right) {
+              int mid = left + (right - left) / 2;
+
+              if (canAchieve(mid)) {
+                  // Achievable → try smaller (minimization)
+                  right = mid;
+              } else {
+                  // Not achievable → need larger value
+                  left = mid + 1;
+              }
+          }
+
+          return left; // Minimum value that satisfies condition
+      }
+
+  predicate_function:
+    name: canAchieve
+    description: >
+      Checks whether a given candidate value satisfies the
+      problem constraints.
+    property:
+      - Must be monotonic
+      - Returns true or false
+
+  complexity:
+    time: O(n log m)
+    space: O(1)
+    explanation:
+      - n → cost of predicate check
+      - m → range of possible answers
+
+  example:
+    name: Koko Eating Bananas
+    goal: Minimize eating speed to finish all bananas in h hours
+    answer_space:
+      min: 1
+      max: max(piles)
+    predicate:
+      description: Can finish all bananas within h hours at speed k?
+
+    java_solution:
+      code: |
+        public static int minEatingSpeed(int[] piles, int h) {
+            int left = 1;
+            int right = 0;
+
+            for (int pile : piles) {
+                right = Math.max(right, pile);
+            }
+
+            while (left < right) {
+                int mid = left + (right - left) / 2;
+
+                if (canFinish(piles, h, mid)) {
+                    // Can finish → try slower speed
+                    right = mid;
+                } else {
+                    // Too slow → need faster speed
+                    left = mid + 1;
+                }
+            }
+
+            return left;
+        }
+
+        private static boolean canFinish(int[] piles, int h, int speed) {
+            int hours = 0;
+
+            for (int pile : piles) {
+                hours += (pile + speed - 1) / speed; // ceil(pile / speed)
+            }
+
+            return hours <= h;
+        }
+
+  interview_takeaways:
+    - Binary search is not limited to arrays
+    - Always identify the answer space first
+    - Predicate function decides feasibility
+    - Works only when predicate is monotonic
+    - Common in scheduling, allocation, optimization problems

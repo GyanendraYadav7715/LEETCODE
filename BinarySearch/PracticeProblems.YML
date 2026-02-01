@@ -1,0 +1,35 @@
+practice_problems:
+  - problem: Search in Rotated Sorted Array
+    level: Medium
+    goal: Find target after rotation
+    technique: Identify sorted half
+
+  - problem: Find Minimum in Rotated Array
+    level: Medium
+    goal: Find pivot / minimum
+    technique: Compare mid with right
+
+  - problem: Koko Eating Bananas
+    level: Medium
+    goal: Minimize eating speed
+    technique: Binary search on answer space
+
+  - problem: Capacity To Ship Packages
+    level: Medium
+    goal: Minimize ship capacity
+    technique: Binary search on capacity
+
+  - problem: Split Array Largest Sum
+    level: Hard
+    goal: Minimize maximum subarray sum
+    technique: Binary search on answer
+
+  - problem: Find Peak Element
+    level: Medium
+    goal: Find any peak in array
+    technique: Move toward higher neighbor
+
+  - problem: Minimum Time to Complete Trips
+    level: Medium
+    goal: Minimize time for trips
+    technique: Binary search on time

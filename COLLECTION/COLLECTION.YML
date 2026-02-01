@@ -1,0 +1,28 @@
+Collection(I):
+  child:
+    List(I):
+      child:
+        ArrayList:
+        LinkedList:
+        Vector:
+          child:
+            Stack:
+    Set(I):
+      child:
+        HashSet:
+          child:
+            LinkedHashSet:
+        SortedSet(I): 
+          child:
+            NavigableSet(I): 
+              child:
+                TreeSet:
+    Queue(I):
+      child:
+        PriorityQueue:
+        BlockingQueue:
+          child:
+            PriorityBlockingQueue:
+            LinkedBlockingQueue:
+            
+  

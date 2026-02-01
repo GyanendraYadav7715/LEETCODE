@@ -1,0 +1,265 @@
+algorithm:
+  name: Advanced Binary Search Patterns
+  patterns:
+    - Pattern 6: 2D Matrix Binary Search
+    - Pattern 7: Kth Element & Median
+
+# =========================
+# PATTERN 6: 2D MATRIX SEARCH
+# =========================
+
+pattern_6:
+  name: 2D Matrix Binary Search
+  description: >
+    Binary search can be extended to 2D matrices by either
+    flattening the matrix or reducing the search space intelligently.
+
+  approach_1:
+    name: Treat 2D Matrix as 1D Array
+    when_to_use:
+      - Each row is sorted
+      - First element of each row is greater than last of previous row
+    idea:
+      - Convert 1D index to (row, col)
+      - Apply classic binary search
+
+    java_code: |
+      public static boolean searchMatrix(int[][] matrix, int target) {
+          if (matrix == null || matrix.length == 0) return false;
+
+          int m = matrix.length;
+          int n = matrix[0].length;
+
+          int left = 0;
+          int right = m * n - 1;
+
+          while (left <= right) {
+              int mid = left + (right - left) / 2;
+
+              int row = mid / n;
+              int col = mid % n;
+              int midVal = matrix[row][col];
+
+              if (midVal == target) {
+                  return true;
+              } else if (midVal < target) {
+                  left = mid + 1;
+              } else {
+                  right = mid - 1;
+              }
+          }
+
+          return false;
+      }
+
+    complexity:
+      time: O(log(m * n))
+      space: O(1)
+
+  approach_2:
+    name: Staircase Search (Search Space Reduction)
+    when_to_use:
+      - Rows sorted
+      - Columns sorted
+    idea:
+      - Start from top-right
+      - Eliminate one row or column each step
+
+    java_code: |
+      public static boolean searchMatrix2(int[][] matrix, int target) {
+          if (matrix == null || matrix.length == 0) return false;
+
+          int m = matrix.length;
+          int n = matrix[0].length;
+
+          int row = 0;
+          int col = n - 1;
+
+          while (row < m && col >= 0) {
+              if (matrix[row][col] == target) {
+                  return true;
+              } else if (matrix[row][col] > target) {
+                  col--; // eliminate column
+              } else {
+                  row++; // eliminate row
+              }
+          }
+
+          return false;
+      }
+
+    complexity:
+      time: O(m + n)
+      space: O(1)
+
+    why_top_right:
+      explanation: >
+        Top-right is the only position where all elements to the left
+        are smaller and all elements below are larger, creating a
+        clear decision boundary.
+
+# =========================
+# PATTERN 7: KTH ELEMENT & MEDIAN
+# =========================
+
+pattern_7:
+  name: Kth Element & Median Problems
+  description: >
+    These problems apply binary search on VALUE or PARTITION space
+    instead of indices.
+
+  kth_smallest_in_matrix:
+    problem: Kth Smallest Element in Sorted Matrix
+    idea:
+      - Binary search on value range
+      - Count elements <= mid using row-wise traversal
+
+    java_code: |
+      public static int kthSmallest(int[][] matrix, int k) {
+          int n = matrix.length;
+          int left = matrix[0][0];
+          int right = matrix[n - 1][n - 1];
+
+          while (left < right) {
+              int mid = left + (right - left) / 2;
+
+              if (countLessOrEqual(matrix, mid) < k) {
+                  left = mid + 1;
+              } else {
+                  right = mid;
+              }
+          }
+
+          return left;
+      }
+
+      private static int countLessOrEqual(int[][] matrix, int mid) {
+          int n = matrix.length;
+          int count = 0;
+          int col = n - 1;
+
+          for (int row = 0; row < n; row++) {
+              while (col >= 0 && matrix[row][col] > mid) {
+                  col--;
+              }
+              count += col + 1;
+          }
+
+          return count;
+      }
+
+    complexity:
+      time: O(n * log(max - min))
+      space: O(1)
+
+  median_of_two_sorted_arrays:
+    difficulty: God-tier
+    idea:
+      - Binary search on partition position
+      - Ensure left partitions contain half elements
+
+    java_code: |
+      public static double findMedianSortedArrays(int[] nums1, int[] nums2) {
+          if (nums1.length > nums2.length) {
+              return findMedianSortedArrays(nums2, nums1);
+          }
+
+          int m = nums1.length;
+          int n = nums2.length;
+          int left = 0;
+          int right = m;
+
+          while (left <= right) {
+              int partitionX = left + (right - left) / 2;
+              int partitionY = (m + n + 1) / 2 - partitionX;
+
+              int maxLeftX = (partitionX == 0) ? Integer.MIN_VALUE : nums1[partitionX - 1];
+              int minRightX = (partitionX == m) ? Integer.MAX_VALUE : nums1[partitionX];
+
+              int maxLeftY = (partitionY == 0) ? Integer.MIN_VALUE : nums2[partitionY - 1];
+              int minRightY = (partitionY == n) ? Integer.MAX_VALUE : nums2[partitionY];
+
+              if (maxLeftX <= minRightY && maxLeftY <= minRightX) {
+                  if ((m + n) % 2 == 0) {
+                      return (Math.max(maxLeftX, maxLeftY) +
+                              Math.min(minRightX, minRightY)) / 2.0;
+                  } else {
+                      return Math.max(maxLeftX, maxLeftY);
+                  }
+              } else if (maxLeftX > minRightY) {
+                  right = partitionX - 1;
+              } else {
+                  left = partitionX + 1;
+              }
+          }
+
+          throw new IllegalArgumentException("Input arrays are not sorted");
+      }
+
+# =========================
+# PRACTICE PROBLEMS
+# =========================
+
+practice_problems:
+  - problem: Search a 2D Matrix
+    level: Medium
+    technique: Treat as 1D array
+
+  - problem: Search a 2D Matrix II
+    level: Medium
+    technique: Staircase search
+
+  - problem: Kth Smallest Element in Sorted Matrix
+    level: Medium
+    technique: Binary search on value
+
+  - problem: Find K Closest Elements
+    level: Medium
+    technique: Binary search + two pointers
+
+  - problem: Median of Two Sorted Arrays
+    level: Hard
+    technique: Binary search on partition
+
+  - problem: Find K-th Smallest Pair Distance
+    level: Hard
+    technique: Binary search on distance
+
+  - problem: Minimize Max Distance to Gas Station
+    level: Hard
+    technique: Binary search on answer
+
+# =========================
+# COMMON PITFALLS
+# =========================
+
+common_pitfalls:
+  - issue: Integer Overflow
+    wrong: (left + right) / 2
+    right: left + (right - left) / 2
+
+  - issue: Infinite Loop
+    cause: Wrong mid calculation
+    fix: Use Math.ceil where required
+
+  - issue: Off-by-One
+    fix: Match loop condition to template
+
+  - issue: Wrong Boundary Update
+    fix: Do not eliminate mid if it can be answer
+
+  - issue: Missing Post-processing
+    fix: Always verify final index
+
+# =========================
+# EDGE CASES
+# =========================
+
+edge_cases:
+  - Empty array
+  - Single element
+  - Two elements
+  - All duplicates
+  - Target at boundaries
+  - Target not present
+  - Negative numbers
