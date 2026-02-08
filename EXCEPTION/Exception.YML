@@ -1,0 +1,130 @@
+java.lang.Object:
+  java.lang.Throwable:
+    # ---------------------------------------------------------
+    # 1. ERRORS (Unrecoverable, system-level issues)
+    # ---------------------------------------------------------
+    java.lang.Error:
+      VirtualMachineError:
+        - StackOverflowError # Common in infinite recursion
+        - OutOfMemoryError # JVM heap is full
+        - InternalError
+        - UnknownError
+      LinkageError:
+        - NoClassDefFoundError # Class existed at compile time but missing at runtime
+        - ClassFormatError
+        - VerifyError
+      AssertionError: # Thrown when an 'assert' statement fails
+      ThreadDeath: # Thrown when stop() is called on a thread (deprecated)
+
+    # ---------------------------------------------------------
+    # 2. EXCEPTIONS (Application-level issues)
+    # ---------------------------------------------------------
+    java.lang.Exception:
+      # A. CHECKED EXCEPTIONS (Must be handled at compile-time)
+      IOException:
+        - FileNotFoundException
+        - EOFException
+        - SocketException
+        - MalformedURLException
+      SQLException: # Database errors
+      ClassNotFoundException: # When using Class.forName()
+      InterruptedException: # Multi-threading (when a thread is sleeping/waiting)
+      CloneNotSupportedException: # When cloning an object without Cloneable interface
+
+      # B. UNCHECKED EXCEPTIONS (RuntimeExceptions)
+      java.lang.RuntimeException:
+        ArithmeticException: # e.g., division by zero
+        NullPointerException: # Accessing a method on a null object
+        IndexOutOfBoundsException:
+          - ArrayIndexOutOfBoundsException
+          - StringIndexOutOfBoundsException
+        ClassCastException: # Invalid type casting
+        IllegalArgumentException:
+          - NumberFormatException # e.g., Integer.parseInt("abc")
+        IllegalStateException: # Environment not ready for operation
+        NoSuchElementException: # Common in Iterators/Enumerations
+
+interview_prep:
+  topic: "Java Exception Handling"
+  level_1_beginner:
+    error_vs_exception:
+      question: "What is the difference between an Error and an Exception?"
+      spoken_response: "In Java, both belong to the Throwable family, but they represent different severities. Errors, like OutOfMemoryError, are critical system-level issues that an application usually shouldn't try to catch. Exceptions, however, represent conditions that a program should anticipate and handle, like an IOException."
+    
+    hierarchy_and_root:
+      question: "Explain the Java Exception hierarchy. What is the root class?"
+      spoken_response: "The root class of the entire hierarchy is java.lang.Throwable. It branches into two main subclasses: Error and Exception. Under Exception, we further branch into Checked Exceptions and RuntimeExceptions, which are unchecked."
+    
+    checked_vs_unchecked:
+      question: "What is the difference between Checked and Unchecked exceptions?"
+      spoken_response: "Checked exceptions are verified at compile-time; the compiler forces you to either handle them with a try-catch or declare them with 'throws'. Unchecked exceptions, or RuntimeExceptions, occur at execution time and usually stem from logic errors like null pointers or index issues."
+    
+    try_without_catch:
+      question: "Can we have a try block without a catch block?"
+      spoken_response: "Yes, but only if it's followed by a finally block or if you are using the 'try-with-resources' syntax. A try block cannot stand entirely alone; it must have at least a catch or a finally."
+    
+    final_finally_finalize:
+      question: "What is the difference between final, finally, and finalize?"
+      spoken_response: "Final is a keyword to make variables, methods, or classes immutable. Finally is a block used after try-catch to execute cleanup code regardless of an exception. Finalize is a protected method in the Object class that the Garbage Collector used to call before reclaiming an object, though it's now deprecated."
+    
+    throw_vs_throws:
+      question: "Explain the difference between the throw and throws keywords."
+      spoken_response: "Throw is used inside a method to explicitly trigger a specific exception instance. Throws is used in a method signature to declare that this method might pass one or more exceptions up the call stack for the caller to handle."
+    
+    uncaught_main_exception:
+      question: "What happens if an exception is not caught in the main method?"
+      spoken_response: "The exception propagates to the JVM's default exception handler. It prints the stack trace to the console and terminates the thread, which in a single-threaded app, means the program crashes."
+
+  level_2_intermediate:
+    exception_propagation:
+      question: "What is Exception Propagation?"
+      spoken_response: "It’s the process where an exception is dropped onto the top of the call stack. If not caught in the current method, it moves down to the previous method in the stack, continuing until it is either caught or reaches the JVM."
+    
+    try_with_resources:
+      question: "How does try-with-resources work and why is it better?"
+      spoken_response: "Introduced in Java 7, it automatically closes resources that implement AutoCloseable (like database connections or file streams). It's better because it eliminates the need for manual cleanup in a finally block and avoids 'suppressed exceptions' issues."
+    
+    multi_catch:
+      question: "Can you catch multiple exceptions in a single catch block?"
+      spoken_response: "Yes, since Java 7, you can use the pipe symbol '|' to catch multiple unrelated exceptions in one block, like 'catch (IOException | SQLException e)'. This reduces code redundancy."
+    
+    exception_chaining:
+      question: "What is Exception Chaining? Why is it useful?"
+      spoken_response: "It's the practice of catching one exception and throwing a new one while preserving the original cause using 'initCause()' or a constructor. This is useful for abstraction, like wrapping a low-level SQLException into a high-level DataAccessException."
+    
+    custom_exception:
+      question: "How do you create a Custom Exception?"
+      spoken_response: "You simply create a class that extends 'Exception' for a checked exception or 'RuntimeException' for an unchecked one. Usually, you provide a constructor that accepts a message string or the original cause."
+    
+    return_in_finally:
+      question: "What happens if both catch and finally have a return statement?"
+      spoken_response: "The return statement in the finally block will override the return statement in the catch block. This can be dangerous because it might 'swallow' the exception or change the expected output of the method."
+    
+    common_unchecked:
+      question: "What are some common unchecked exceptions?"
+      spoken_response: "The most frequent ones are NullPointerException, ArrayIndexOutOfBoundsException, ArithmeticException (like divide by zero), and IllegalArgumentException."
+
+  level_3_advanced:
+    spring_boot_handling:
+      question: "How do you handle exceptions in Spring Boot?"
+      spoken_response: "We use a Global Exception Handler using the @ControllerAdvice annotation. Inside that class, we define methods annotated with @ExceptionHandler to intercept specific exceptions and return a consistent API response structure."
+    
+    avoid_generic_exception:
+      question: "Why avoid catching the generic Exception class?"
+      spoken_response: "Catching the top-level Exception class can hide bugs. It intercepts everything, including RuntimeExceptions that you might not have intended to catch, making debugging difficult and preventing specific error handling logic."
+    
+    multi_threading:
+      question: "How do you handle exceptions in a multi-threaded environment?"
+      spoken_response: "Since run() methods can't throw checked exceptions, we often use 'Thread.UncaughtExceptionHandler' or wrap the logic in a try-catch. When using ThreadPools or Futures, the exception is usually captured in the Future object and thrown when you call '.get()'."
+    
+    performance_impact:
+      question: "What is the performance impact of throwing exceptions?"
+      spoken_response: "Creating an exception is expensive because the JVM has to fill in the stack trace, which requires walking the thread's call stack. Exceptions should be used for exceptional cases, not for standard control flow."
+    
+    rest_mapping:
+      question: "How do you map Java exceptions to HTTP Status Codes?"
+      spoken_response: "In Spring, we use the @ResponseStatus annotation on custom exception classes or return a ResponseEntity with a specific status (like 404 for NotFound) from an @ExceptionHandler method."
+    
+    anti_patterns:
+      question: "What are some anti-patterns in exception handling?"
+      spoken_response: "The biggest one is 'swallowing' an exception—catching it but leaving the catch block empty. Others include using exceptions for logic (GOTO style), logging and then re-throwing the same exception, and failing to close resources."
