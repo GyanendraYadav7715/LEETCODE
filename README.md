@@ -85,12 +85,6 @@
 - [GeeksforGeeks](https://www.geeksforgeeks.org/) - Theory & practice
 - [Codeforces](https://codeforces.com/) - Competitive programming
 
-### **YouTube Channels:**
- 
-
-### **Books:**
- 
-
 ---
 
 ## 💡 Tips for Success
@@ -120,8 +114,9 @@
 
 ## 🚦 Getting Started TODAY
 
-1. **Setup**: Install your preferred IDE/editor
-2. **Pick a Language**: Choose one and stick with it
+1. **Setup**: Install your preferred IDE/editor // My Recemendation IntelliJ IDEA
+2. **Pick a Language**: Choose one and stick with it // My Recemendation  JAVA
+3. **Before solving any leetcode question**: Deep dive into Java not only syntax but ndreatns how and why it work like that ,Be aware of Collection framework with deep understanding for refernce to go deep you can use **C** language .
 3. **Start Small**: Solve 1 easy problem today
 4. **Build Habit**: Set a daily goal (30-60 mins)
 5. **Track Progress**: Maintain a journal or use this repo
